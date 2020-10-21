@@ -12,13 +12,12 @@ using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.IO;
 
-//필요 dll, 닷넷 포함 설치 파일로 -> c# installer .Net Framework
-
 namespace SendMail
 {
     public partial class SendMail : Form
     {
         private string currentFile = string.Empty;
+        private string currentFilePath = string.Empty;
 
         public SendMail()
         {
@@ -43,6 +42,7 @@ namespace SendMail
             if (openCsvFileDialog.ShowDialog() == DialogResult.OK)
             {
                 currentFile = openCsvFileDialog.FileName;
+                currentFilePath = Path.GetDirectoryName(currentFile);
 
                 //textBox에 파일 경로 입력
                 addressTextBox.Text = currentFile;
@@ -79,7 +79,7 @@ namespace SendMail
 
             foreach (var data in MailDataManager.datas)
             {
-                Log.Logs += mail.Send(data.address, Config.Subject, Config.Body, data.file);
+                Log.Logs += mail.Send(data.address, Config.Subject, Config.Body, currentFilePath + "\\" + data.file);
             }
             Log.Logs += "전송 종료";
         }
