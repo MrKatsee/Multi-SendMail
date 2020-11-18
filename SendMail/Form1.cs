@@ -79,7 +79,7 @@ namespace SendMail
 
             foreach (var data in MailDataManager.datas)
             {
-                Log.Logs += mail.Send(data.address, Config.Subject, Config.Body, currentFilePath + "\\" + data.file);
+                Log.Logs += mail.Send(data.address, subjectTextBox.Text, bodyTextBox.Text, currentFilePath + "\\" + data.file);
             }
             Log.Logs += "전송 종료";
         }
@@ -221,18 +221,39 @@ namespace SendMail
             StringBuilder sb = new StringBuilder();
 
             //ini 읽기
-            GetPrivateProfileString("FROM_MAIL", "MAIL", "(NONE)", sb, 32, path);
-            if (sb.ToString() != null) Mail = sb.ToString();
-            GetPrivateProfileString("FROM_MAIL", "PWD", "(NONE)", sb, 32, path);
-            if (sb.ToString() != null) Pwd = sb.ToString();
-            GetPrivateProfileString("SMTP", "HOST", "(NONE)", sb, 32, path);
-            if (sb.ToString() != null) Host = sb.ToString();
-            GetPrivateProfileString("SMTP", "PORT", "(NONE)", sb, 32, path);
-            if (sb.ToString() != null) int.TryParse(sb.ToString(), out Port);
-            GetPrivateProfileString("DEFAULT", "SUBJECT", "(NONE)", sb, 32, path);
-            if (sb.ToString() != null) Subject = sb.ToString();
-            GetPrivateProfileString("DEFAULT", "BODY", "(NONE)", sb, 32, path);
-            if (sb.ToString() != null) Body = sb.ToString().Replace("\\n", Environment.NewLine);
+            using (var reader = new StreamReader(path))
+            {
+                string line;
+
+                while((line = reader.ReadLine()) != null)
+                {
+                    if (line.Contains("[")) continue;
+
+                    var words = line.Split('=');
+
+                    switch(words[0])
+                    {
+                        case "MAIL":
+                            Mail = words[1];
+                            break;
+                        case "PWD":
+                            Pwd = words[1];
+                            break;
+                        case "HOST":
+                            Host = words[1];
+                            break;
+                        case "PORT":
+                            int.TryParse(words[1], out Port);
+                            break;
+                        case "SUBJECT":
+                            Subject = words[1];
+                            break;
+                        case "BODY":
+                            Body = words[1].Replace("\\n", Environment.NewLine);
+                            break;
+                    }
+                }
+            }
         }
     }
 

@@ -15,26 +15,26 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_8D1A1044406544F18D4A016B0A040C32"
+        "MsmKey" = "8:_2A3A4C7D9AA74CFF89855A468FCC7FD7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_AC4BBA98EEB14EBFA7EA8DE0704D6A5A"
+        "MsmKey" = "8:_8F996E2BA3A94F64ADCBB0CE78798AB2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D031E8BCC43440A2A4E315CF6710039D"
+        "MsmKey" = "8:_C61461FB8DE94C039AAABD9029BB016D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8D1A1044406544F18D4A016B0A040C32"
+        "OwnerKey" = "8:_2A3A4C7D9AA74CFF89855A468FCC7FD7"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -132,14 +132,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8D1A1044406544F18D4A016B0A040C32"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2A3A4C7D9AA74CFF89855A468FCC7FD7"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:SendMail, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8D1A1044406544F18D4A016B0A040C32"
+                    "_2A3A4C7D9AA74CFF89855A468FCC7FD7"
                     {
                     "Name" = "8:SendMail.exe"
                     "Attributes" = "3:512"
@@ -163,10 +163,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AC4BBA98EEB14EBFA7EA8DE0704D6A5A"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8F996E2BA3A94F64ADCBB0CE78798AB2"
             {
-            "SourcePath" = "8:..\\SendMail\\bin\\Debug\\Setting.ini"
-            "TargetName" = "8:Setting.ini"
+            "SourcePath" = "8:..\\SendMail\\bin\\Debug\\SendMail.pdb"
+            "TargetName" = "8:SendMail.pdb"
             "Tag" = "8:"
             "Folder" = "8:_17251B92EC3649DDAFF4E4A8B1274803"
             "Condition" = "8:"
@@ -183,10 +183,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D031E8BCC43440A2A4E315CF6710039D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C61461FB8DE94C039AAABD9029BB016D"
             {
-            "SourcePath" = "8:..\\SendMail\\bin\\Debug\\SendMail.pdb"
-            "TargetName" = "8:SendMail.pdb"
+            "SourcePath" = "8:..\\SendMail\\bin\\Debug\\Setting.ini"
+            "TargetName" = "8:Setting.ini"
             "Tag" = "8:"
             "Folder" = "8:_17251B92EC3649DDAFF4E4A8B1274803"
             "Condition" = "8:"
