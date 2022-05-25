@@ -15,13 +15,6 @@ namespace SendMail
         public LogWindow()
         {
             InitializeComponent();
-
-            
-        }
-
-        private void LogTextBox_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         public void UpdateLog(string log)

@@ -38,7 +38,6 @@
             this.logTextBox.Name = "logTextBox";
             this.logTextBox.Size = new System.Drawing.Size(429, 426);
             this.logTextBox.TabIndex = 0;
-            this.logTextBox.TextChanged += new System.EventHandler(this.LogTextBox_TextChanged);
             // 
             // LogWindow
             // 
