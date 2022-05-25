@@ -45,6 +45,8 @@
             this.openFilePathDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.label3 = new System.Windows.Forms.Label();
             this.txt_fromAddress = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txt_password = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -207,11 +209,33 @@
             this.txt_fromAddress.Size = new System.Drawing.Size(342, 28);
             this.txt_fromAddress.TabIndex = 18;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label6.Location = new System.Drawing.Point(573, 16);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(80, 18);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "비밀번호";
+            // 
+            // txt_password
+            // 
+            this.txt_password.Location = new System.Drawing.Point(662, 13);
+            this.txt_password.Margin = new System.Windows.Forms.Padding(4);
+            this.txt_password.Name = "txt_password";
+            this.txt_password.PasswordChar = '*';
+            this.txt_password.Size = new System.Drawing.Size(342, 28);
+            this.txt_password.TabIndex = 20;
+            // 
             // SendMail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1143, 838);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txt_password);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txt_fromAddress);
             this.Controls.Add(this.btn_fileImport);
@@ -255,6 +279,8 @@
         private System.Windows.Forms.FolderBrowserDialog openFilePathDialog;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txt_fromAddress;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txt_password;
     }
 }
 

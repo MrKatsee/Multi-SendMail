@@ -11,10 +11,10 @@ using System.Net;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.IO;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Gmail.v1;
-using Google.Apis.Services;
-using Google.Apis.Util.Store;
+using System.Reflection;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using PdfSharp.Pdf.Security;
 
 namespace SendMail
 {
@@ -28,6 +28,7 @@ namespace SendMail
     {
         private string currentCSVFile = string.Empty;
         private string currentFilePath = string.Empty;
+        private string secretFilePath { get { return currentFilePath + "\\" + "files_s"; } }
 
         public SendMail()
         {
@@ -43,6 +44,7 @@ namespace SendMail
             subjectTextBox.Text = Config.Read(ConfigKey.Subject);
             bodyTextBox.Text = Config.Read(ConfigKey.Body).Replace("\\n", Environment.NewLine);
             txt_fromAddress.Text = Config.Read(ConfigKey.FromAddress);
+            txt_password.Text = Config.Read(ConfigKey.Password);
 
             currentCSVFile = Config.Read(ConfigKey.CsvPath);
             currentFilePath = Config.Read(ConfigKey.FilePath);
@@ -111,10 +113,35 @@ namespace SendMail
             Config.Write(ConfigKey.Subject, subjectTextBox.Text, false);
             Config.Write(ConfigKey.Body, bodyTextBox.Text, false);
             Config.Write(ConfigKey.FromAddress, txt_fromAddress.Text, false);
+            Config.Write(ConfigKey.Password, txt_password.Text, false);
 
             Config.Save();
 
             Log.Clear();
+
+            if (Directory.Exists(secretFilePath) == false) {
+                Directory.CreateDirectory(secretFilePath);
+            }
+
+            foreach (var data in MailDataManager.datas) {
+                PdfDocument doc = PdfReader.Open(currentFilePath + "\\" + data.file, PdfDocumentOpenMode.Modify);
+                PdfSecuritySettings settings = doc.SecuritySettings;
+
+                settings.UserPassword = data.password;
+                settings.OwnerPassword = "rohmmis";
+
+                settings.PermitAccessibilityExtractContent = false;
+                settings.PermitAnnotations = false;
+                settings.PermitAssembleDocument = false;
+                settings.PermitExtractContent = false;
+                settings.PermitFormsFill = false;
+                settings.PermitFullQualityPrint = false;
+                settings.PermitModifyDocument = false;
+                settings.PermitPrint = false;
+
+                doc.Save(secretFilePath + "\\" + data.file);
+            }
+
             Log.Logs += string.Format("{0}{1}", "== 발송 시작 ==", Environment.NewLine);
             
             if (string.IsNullOrEmpty(currentCSVFile) || string.IsNullOrEmpty(currentFilePath)) {
@@ -122,83 +149,67 @@ namespace SendMail
                 return;
             }
 
-            try {
-                var credentials = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    new ClientSecrets {
-                        ClientId = "452159874928-c19cc4ia8rbrr7mi4opgdu8sml5ilfao.apps.googleusercontent.com",
-                        ClientSecret = "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"
-                    },
-                    new string[] { GmailService.Scope.GmailSend }, "user", System.Threading.CancellationToken.None
-                ).Result;
+            Mail mail = new Mail(txt_fromAddress.Text, txt_password.Text);
 
-                GmailService service = new GmailService(new BaseClientService.Initializer() {
-                    HttpClientInitializer = credentials
-                });
-
-                Mail mail = new Mail(txt_fromAddress.Text, service);
-
-                foreach (var data in MailDataManager.datas) {
-                    Log.Logs += mail.Send(data.address, subjectTextBox.Text, bodyTextBox.Text, currentFilePath + "\\" + data.file);
-                }
-
-                Log.Logs += string.Format("{0}{1}{2}", Environment.NewLine, "== 발송 완료 ==", Environment.NewLine);
-
-                Log.OnSendComplete();
-            } catch (Exception error) {
-                Log.Logs += error.Message;
+            foreach (var data in MailDataManager.datas) {
+                Log.Logs += mail.Send(data.address, subjectTextBox.Text, bodyTextBox.Text, secretFilePath + "\\" + data.file);
             }
+
+            Log.Logs += string.Format("{0}{1}{2}", Environment.NewLine, "== 발송 완료 ==", Environment.NewLine);
+
+            Log.OnSendComplete();
         }
     }
 
     public class Mail
     {
         private string fromAddress;
+        private string password;
 
-        private GmailService service;
-
-        public Mail(string fromAddress, GmailService service)
+        public Mail(string fromAddress, string password)
         {
             this.fromAddress = fromAddress;
-
-            this.service = service;
+            this.password = password;
         }
 
-        public string Send(string toAddress, string subject, string body, string file = "") {
+        public string Send(string toAddress, string subject, string body, string file) {
+            SmtpClient smtp = null;
+            MailMessage msg = null;
+
             try {
+                smtp = new SmtpClient {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress, password),
+                    Timeout = 20000
+                };
+                //메세지
+                msg = new MailMessage(fromAddress, toAddress) {
+                    Subject = subject,
+                    Body = body
+                };
+                //첨부 파일
+                Attachment att = new Attachment(file);
+                msg.Attachments.Add(att);
 
-                StringBuilder sbMail = new StringBuilder();
-                sbMail.AppendFormat("From: {1}{0}", System.Environment.NewLine, fromAddress);
-                sbMail.AppendFormat("To: {1}{0}", System.Environment.NewLine, toAddress);
-                sbMail.AppendFormat("Subject: =?UTF-8?B?{1}?={0}", System.Environment.NewLine, Base64UrlEncode(subject));
-                sbMail.AppendFormat("Content-Type: text/html; charset=utf-8{0}", System.Environment.NewLine);
-                sbMail.AppendFormat("{0}{1}", System.Environment.NewLine, body);
+                //발송
+                smtp.Send(msg);
 
-                var message = new Google.Apis.Gmail.v1.Data.Message();
-                message.Raw = Base64UrlEncode(sbMail.ToString());
-
-                service.Users.Messages.Send(message, "me").Execute();
-
-                return string.Format("전송 성공: {0}", toAddress);
-            } catch (System.Exception e) {
-                Log.AddFailList(toAddress);
-                return string.Format("전송 실패: {0}", toAddress);
+                return toAddress + " : 전송 완료";
+            } catch (Exception e) {
+                return " : 전송 실패 (" + e + ")";
             }
-        }
-
-
-        private string Base64UrlEncode(string input) {
-            var inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
-            return Convert.ToBase64String(inputBytes)
-              .Replace('+', '-')
-              .Replace('/', '_')
-              .Replace("=", "");
         }
     }
 
     public class MailData
     {
         public string address;
-        public string file;
+        public string file; 
+        public string password;
     }
 
     public class MailDataManager
@@ -240,8 +251,9 @@ namespace SendMail
                 //각 행을 데이터화 하여 저장
                 MailData data = new MailData()
                 {
-                    address = dr.Field<string>("address"),
-                    file = dr.Field<string>("file")
+                    address = splitedLines[0],
+                    file = splitedLines[1],
+                    password = splitedLines[2]
                 };
                 datas.Add(data);
             }
@@ -251,7 +263,7 @@ namespace SendMail
     }
 
     public enum ConfigKey {
-        Host, Port, Subject, Body, ClientID, SecretID, CsvPath, FilePath, FromAddress
+        Host, Port, Subject, Body, ClientID, SecretID, CsvPath, FilePath, FromAddress, Password
     }
     public static class Config {
 
@@ -287,6 +299,7 @@ namespace SendMail
                 Write(ConfigKey.CsvPath, "", false);
                 Write(ConfigKey.FilePath, "", false);
                 Write(ConfigKey.FromAddress, "", false);
+                Write(ConfigKey.Password, "", false);
 
                 Save();
             }
@@ -331,6 +344,7 @@ namespace SendMail
                 case ConfigKey.CsvPath: return "CSVPATH";
                 case ConfigKey.FilePath: return "FILEPATH";
                 case ConfigKey.FromAddress: return "FROM";
+                case ConfigKey.Password: return "PASSWORD";
 
                 default: throw new NotImplementedException();
             }
@@ -346,6 +360,7 @@ namespace SendMail
                 case "CSVPATH": return ConfigKey.CsvPath;
                 case "FILEPATH": return ConfigKey.FilePath;
                 case "FROM": return ConfigKey.FromAddress;
+                case "PASSWORD": return ConfigKey.Password;
 
                 default: throw new NotImplementedException();
             }
