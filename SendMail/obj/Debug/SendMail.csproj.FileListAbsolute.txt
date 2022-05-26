@@ -22,7 +22,6 @@ C:\Users\M\Documents\Multi-SendMail\SendMail\obj\Debug\SendMail.pdb
 C:\Users\HS\Documents\Multi-SendMail\SendMail\bin\Debug\SendMail.exe.config
 C:\Users\HS\Documents\Multi-SendMail\SendMail\bin\Debug\SendMail.exe
 C:\Users\HS\Documents\Multi-SendMail\SendMail\bin\Debug\SendMail.pdb
-C:\Users\HS\Documents\Multi-SendMail\SendMail\obj\Debug\SendMail.csproj.AssemblyReference.cache
 C:\Users\HS\Documents\Multi-SendMail\SendMail\obj\Debug\SendMail.SendMail.resources
 C:\Users\HS\Documents\Multi-SendMail\SendMail\obj\Debug\SendMail.LogWindow.resources
 C:\Users\HS\Documents\Multi-SendMail\SendMail\obj\Debug\SendMail.Properties.Resources.resources
