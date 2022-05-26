@@ -49,3 +49,4 @@ C:\Users\HS\Documents\Multi-SendMail\SendMail\bin\Debug\PdfSharp.xml
 C:\Users\HS\Documents\Multi-SendMail\SendMail\bin\Debug\PdfSharp.Charting.xml
 C:\Users\HS\Documents\Multi-SendMail\SendMail\bin\Debug\de\PdfSharp.resources.dll
 C:\Users\HS\Documents\Multi-SendMail\SendMail\bin\Debug\de\PdfSharp.Charting.resources.dll
+C:\Users\HS\Documents\Multi-SendMail\SendMail\obj\Debug\SendMail.csproj.AssemblyReference.cache

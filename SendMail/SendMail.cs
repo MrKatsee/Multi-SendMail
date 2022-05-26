@@ -118,22 +118,26 @@ namespace SendMail
             }
 
             foreach (var data in MailDataManager.datas) {
-                PdfDocument doc = PdfReader.Open(currentFilePath + "\\" + data.file, PdfDocumentOpenMode.Modify);
-                PdfSecuritySettings settings = doc.SecuritySettings;
+                if (string.IsNullOrEmpty(data.password)) {
+                    File.Copy(currentFilePath + "\\" + data.file, secretFilePath + "\\" + data.file, true);
+                } else {
+                    PdfDocument doc = PdfReader.Open(currentFilePath + "\\" + data.file, PdfDocumentOpenMode.Modify);
+                    PdfSecuritySettings settings = doc.SecuritySettings;
 
-                settings.UserPassword = data.password;
-                settings.OwnerPassword = "rohmmis";
+                    settings.UserPassword = data.password;
+                    settings.OwnerPassword = "rohmmis";
 
-                settings.PermitAccessibilityExtractContent = false;
-                settings.PermitAnnotations = false;
-                settings.PermitAssembleDocument = false;
-                settings.PermitExtractContent = false;
-                settings.PermitFormsFill = false;
-                settings.PermitFullQualityPrint = false;
-                settings.PermitModifyDocument = false;
-                settings.PermitPrint = false;
+                    settings.PermitAccessibilityExtractContent = false;
+                    settings.PermitAnnotations = false;
+                    settings.PermitAssembleDocument = false;
+                    settings.PermitExtractContent = false;
+                    settings.PermitFormsFill = false;
+                    settings.PermitFullQualityPrint = false;
+                    settings.PermitModifyDocument = false;
+                    settings.PermitPrint = false;
 
-                doc.Save(secretFilePath + "\\" + data.file);
+                    doc.Save(secretFilePath + "\\" + data.file);
+                }
             }
 
             Log.Logs += string.Format("{0}{1}", "== 발송 시작 ==", Environment.NewLine);
