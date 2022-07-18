@@ -99,8 +99,6 @@
             // isFirstLineHeaderCheckBox
             // 
             this.isFirstLineHeaderCheckBox.AutoSize = true;
-            this.isFirstLineHeaderCheckBox.Checked = true;
-            this.isFirstLineHeaderCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.isFirstLineHeaderCheckBox.Location = new System.Drawing.Point(20, 789);
             this.isFirstLineHeaderCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.isFirstLineHeaderCheckBox.Name = "isFirstLineHeaderCheckBox";

@@ -46,7 +46,8 @@ namespace SendMail
             txt_csvPath.Text = currentCSVFile;
             txt_filePath.Text = currentFilePath;
 
-            if (string.IsNullOrEmpty(currentCSVFile) == false) {
+            if (string.IsNullOrEmpty(currentCSVFile) == false &&
+                File.Exists(currentCSVFile)) {
                 dataGridView.DataSource = MailDataManager.CSVParse(currentCSVFile, isFirstLineHeaderCheckBox.Checked);
             }
         }
@@ -134,7 +135,7 @@ namespace SendMail
                     settings.PermitFormsFill = false;
                     settings.PermitFullQualityPrint = false;
                     settings.PermitModifyDocument = false;
-                    settings.PermitPrint = false;
+                    settings.PermitPrint = true;
 
                     doc.Save(secretFilePath + "\\" + data.file);
                 }
